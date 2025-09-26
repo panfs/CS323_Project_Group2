@@ -53,7 +53,7 @@ RBRACK : ']' ;
 Identifier : [a-zA-Z_][a-zA-Z0-9_]* ;
 Number     : '0' | [1-9][0-9]* | '-'[1-9][0-9]* ;
 Char       : '\'' (EscapeChar | ~['\\\r\n]) '\'' ;
-fragment EscapeChar: '\\' ['"\\nrtbf];  // 支持常见转义字符：单引号、双引号、反斜杠、换行、回车、制表符、退格、换页
+fragment EscapeChar: '\\' [nrt\\'"0];
 // ---------- Whitespace & Comments ----------
 WS      : [ \t\r\n]+ -> channel(WHITESPACE);
 LINE_COMMENT: '//' .*? ('\r'? '\n' | EOF) -> channel(COMMENTS);
