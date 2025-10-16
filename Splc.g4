@@ -127,7 +127,7 @@ RBRACK : ']' ;
 Identifier : [a-zA-Z_][a-zA-Z_0-9]* ;
 Number     : '0' | [1-9][0-9]*      ;
 Char       : '\'' (EscapeChar | ~['\\\r\n]) '\'' ;
-fragment EscapeChar: '\\' ['"\\nrt];  // 支持常见的转义字符
+fragment EscapeChar: '\\' ['"\\nrt0];  // 支持常见的转义字符
 // ---------- Whitespace & Comments ----------
 WS      : [ \t\r\n]+ -> skip;
 LINE_COMMENT: '//' .*? ('\r'? '\n' | EOF) -> skip;
