@@ -1,1 +1,2 @@
-int abcd;
+struct Point { int x; int y; };
+struct Point p;  // 正确 - 你的语法支持

@@ -1,6 +1,6 @@
 int main() {
     int i = 10;
-    if (i > 5 {
+    fi (i > 5) {
         i = 0;
     }
     return i;

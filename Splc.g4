@@ -15,15 +15,74 @@ grammar Splc;
 program: globalDef* EOF;
 
 globalDef
-    : // TODO
+    :specifier Identifier LPAREN funcArgs RPAREN LBRACE statement* RBRACE
+    |specifier varDec SEMI
+    |specifier SEMI
     ;
+specifier
+    :INT
+    |CHAR
+    |'struct' Identifier
+    |'struct' Identifier LBRACE (specifier varDec SEMI)* RBRACE
+    ;
+
+varDec
+    : Identifier
+    | varDec LBRACK Number RBRACK
+    | STAR varDec
+    | LPAREN varDec RPAREN
+    ;
+
+funcArgs
+    :(specifier varDec (COMMA specifier varDec)*)?
+    ;
+
+statement
+    : LBRACE statement* RBRACE                    # BlockStatement
+    | specifier varDec (ASSIGN expression)? SEMI  # VarDecStmt
+    | IF LPAREN expression RPAREN statement (ELSE statement)? # IfStatement
+    | WHILE LPAREN expression RPAREN statement    # WhileStatement
+    | RETURN expression SEMI                      # ReturnStatement
+    | expression SEMI                             # ExpressionStatement
+    ;
+
+
+expression
+    : primary                                      # PrimaryExpression
+    | expression LBRACK expression RBRACK          # ArrayAccessExpression
+    | expression DOT Identifier                    # StructAccessExpression
+    | expression ARROW Identifier                  # StructPtrAccessExpression
+    | expression INC                               # PostfixIncExpression
+    | expression DEC                               # PostfixDecExpression
+    | Identifier LPAREN argumentList? RPAREN       # FunctionCallExpression
+    | <assoc=right> INC expression                 # PrefixIncExpression
+    | <assoc=right> DEC expression                 # PrefixDecExpression
+    | <assoc=right> PLUS expression                # UnaryPlusExpression
+    | <assoc=right> MINUS expression               # UnaryMinusExpression
+    | <assoc=right> NOT expression                 # LogicalNotExpression
+    | <assoc=right> AMP expression                 # AddressOfExpression
+    | <assoc=right> STAR expression                # DereferenceExpression
+    | expression (STAR | DIV | MOD) expression     # MultiplicativeExpression
+    | expression (PLUS | MINUS) expression         # AdditiveExpression
+    | expression (LT | LE | GT | GE) expression    # RelationalExpression
+    | expression (EQ | NEQ) expression             # EqualityExpression
+    | expression AND expression                    # LogicalAndExpression
+    | expression OR expression                     # LogicalOrExpression
+    | <assoc=right> expression ASSIGN expression   # AssignExpression
+    ;
+
+primary
+    : Identifier           # IdentifierPrimary
+    | Number               # NumberPrimary
+    | Char                 # CharPrimary
+    | LPAREN expression RPAREN # ParenPrimary
+    ;
+
+argumentList: expression (COMMA expression)*;
 
 // =========================
 // Lexer Rules
 // =========================
-
-channels { WHITESPACE, COMMENTS }
-
 // ---------- Keywords ----------
 INT   : 'int'    ;
 CHAR  : 'char'   ;
@@ -64,11 +123,11 @@ RBRACE : '}' ;
 LBRACK : '[' ;
 RBRACK : ']' ;
 // ---------- Identifiers & Literals ----------
-Identifier : [a-zA-Z_][a-zA-Z0-9_]* ;
-Number     : '0' | [1-9][0-9]* | '-'[1-9][0-9]* ;
+Identifier : [a-zA-Z_][a-zA-Z_0-9]* ;
+Number     : '0' | [1-9][0-9]*      ;
 Char       : '\'' (EscapeChar | ~['\\\r\n]) '\'' ;
-fragment EscapeChar: '\\' [nrt\\'"0];
+fragment EscapeChar: '\\' ['"\\nrt0];
 // ---------- Whitespace & Comments ----------
-WS      : [ \t\r\n]+ -> channel(WHITESPACE);
-LINE_COMMENT: '//' .*? ('\r'? '\n' | EOF) -> channel(COMMENTS);
-BLOCK_COMMENT: '/*' .*? '*/' -> channel(COMMENTS);
+WS      : [ \t\r\n]+ -> skip;
+LINE_COMMENT: '//' .*? ('\r'? '\n' | EOF) -> skip;
+BLOCK_COMMENT: '/*' .*? '*/' -> skip;
