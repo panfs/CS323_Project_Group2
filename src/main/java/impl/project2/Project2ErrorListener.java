@@ -110,37 +110,18 @@ public class Project2ErrorListener extends BaseErrorListener {
     public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol,
                             int line, int charPositionInLine, String msg,
                             RecognitionException e) {
-        // 详细的调试信息
-        System.err.println("=== 语法错误调试信息 ===");
-        System.err.println("原始错误消息: " + msg);
-        System.err.println("错误行号: " + line);
-        System.err.println("字符位置: " + charPositionInLine);
 
-        // 特别检查是否是右大括号缺失的情况
-        if (msg.contains("}") || msg.contains("RBRACE")) {
-            System.err.println("检测到可能与右大括号相关的错误");
-        }
 
         if (recognizer instanceof Parser) {
             Parser parser = (Parser) recognizer;
             Token currentToken = parser.getCurrentToken();
-            System.err.println("当前token: '" + currentToken.getText() +
-                    "' (类型: " + currentToken.getType() + ")");
-
-            // 检查当前token是否是EOF
-            if (currentToken.getType() == Token.EOF) {
-                System.err.println("当前token是EOF，可能是结构不完整");
-            }
         }
 
         String missingSymbol = extractMissingSymbol(msg);
-        System.err.println("提取的符号: '" + missingSymbol + "'");
         String tokenName = convertToTokenName(missingSymbol);
         int previousTokenLine = getPreviousTokenLine(recognizer, line);
 
-        System.err.println("转换后的token名称: " + tokenName);
-        System.err.println("前一个token行号: " + previousTokenLine);
-        System.err.println("=== 调试信息结束 ===");
+
 
         MissingSymbolError missingSymbolError = new MissingSymbolError(tokenName, previousTokenLine);
 
@@ -169,35 +150,29 @@ public class Project2ErrorListener extends BaseErrorListener {
 //        }
 //
 //        return msg.substring(startQuote + 1, endQuote);
-        System.err.println("开始提取符号，消息: " + msg);
-
+        
         // 特别处理 "mismatched input" 情况
         if (msg.contains("mismatched input")) {
-            System.err.println("检测到 mismatched input 错误");
             return extractFromMismatchedInput(msg);
         }
 
         // 特别处理 "no viable alternative" 情况
         if (msg.contains("no viable alternative")) {
-            System.err.println("检测到 no viable alternative 错误");
             return extractFromNoViableAlternative(msg);
         }
 
         // 特别处理 extraneous input '<EOF>' expecting { ... } 的情况
         if (msg.contains("extraneous input '<EOF>'") && msg.contains("expecting")) {
-            System.err.println("检测到 EOF 期望符号集合的情况");
-
+            
             // 在这种情况下，我们需要推断缺失的符号
             // 对于函数定义，最可能缺失的是右大括号
             if (msg.contains("'}") || msg.contains("RBRACE")) {
-                System.err.println("推断缺失右大括号");
                 return "}";
             }
 
             // 可以根据其他上下文推断其他符号
             // 比如如果包含 ';'，可能是缺失分号
             if (msg.contains("';") || msg.contains("SEMI")) {
-                System.err.println("推断缺失分号");
                 return ";";
             }
         }
@@ -207,7 +182,6 @@ public class Project2ErrorListener extends BaseErrorListener {
             Matcher matcher = pattern.matcher(msg);
             if (matcher.find()) {
                 String symbol = matcher.group(1);
-                System.err.println("格式1匹配到符号: " + symbol);
                 return cleanSymbol(symbol);
             }
 
@@ -216,7 +190,6 @@ public class Project2ErrorListener extends BaseErrorListener {
             matcher = pattern.matcher(msg);
             if (matcher.find()) {
                 String symbol = matcher.group(1);
-                System.err.println("格式1b匹配到符号: " + symbol);
                 return cleanSymbol(symbol);
             }
         }
@@ -227,7 +200,6 @@ public class Project2ErrorListener extends BaseErrorListener {
             Matcher matcher = pattern.matcher(msg);
             if (matcher.find()) {
                 String symbol = matcher.group(1);
-                System.err.println("格式2匹配到符号: " + symbol);
                 return cleanSymbol(symbol);
             }
 
@@ -236,7 +208,6 @@ public class Project2ErrorListener extends BaseErrorListener {
             matcher = pattern.matcher(msg);
             if (matcher.find()) {
                 String symbol = matcher.group(1);
-                System.err.println("格式2b匹配到符号: " + symbol);
                 return cleanSymbol(symbol);
             }
 
@@ -257,11 +228,9 @@ public class Project2ErrorListener extends BaseErrorListener {
         if (!matches.isEmpty()) {
             // 通常最后一个单引号内容是我们需要的
             String symbol = matches.get(matches.size() - 1);
-            System.err.println("格式3匹配到符号: " + symbol);
             return cleanSymbol(symbol);
         }
 
-        System.err.println("所有格式匹配失败");
         return "UNKNOWN";
     }
     private String cleanSymbol(String symbol) {
@@ -282,8 +251,7 @@ public class Project2ErrorListener extends BaseErrorListener {
         return symbol;
     }
     private String extractFromExpectingSet(String msg) {
-        System.err.println("从期望集合中提取符号");
-
+        
         // 根据上下文推断最可能缺失的符号
         // 这里可以根据具体的语法规则进行更精确的推断
 
@@ -311,40 +279,34 @@ public class Project2ErrorListener extends BaseErrorListener {
         return "}";
     }
     private String extractFromNoViableAlternative(String msg) {
-        System.err.println("从 no viable alternative 中提取符号");
-
+        
         // 分析输入内容来推断缺失的符号
         Pattern pattern = Pattern.compile("input '([^']*)'");
         Matcher matcher = pattern.matcher(msg);
         if (matcher.find()) {
             String input = matcher.group(1);
-            System.err.println("分析输入: " + input);
-
+            
             // 根据常见的语法错误模式进行推断
 
             // 模式1: 函数定义中缺少左括号
             // 例如: "intmain)" -> 应该在 main 和 ) 之间缺少 (
             if (input.matches(".*[a-zA-Z_][a-zA-Z_0-9]*\\).*")) {
-                System.err.println("推断: 函数名后直接跟右括号，可能缺少左括号");
                 return "(";
             }
 
             // 模式2: 缺少分号
             // 例如: "intx" 后面没有符号
             if (input.matches(".*[a-zA-Z_][a-zA-Z_0-9]*[^;\\s].*")) {
-                System.err.println("推断: 标识符后没有分号或其他符号");
                 return ";";
             }
 
             // 模式3: 结构体访问缺少点号
             if (input.matches(".*[a-zA-Z_][a-zA-Z_0-9]*\\s+[a-zA-Z_][a-zA-Z_0-9]*.*")) {
-                System.err.println("推断: 两个标识符相邻，可能缺少点号或箭头");
                 return ".";
             }
 
             // 模式4: 数组访问缺少左方括号
             if (input.matches(".*[a-zA-Z_][a-zA-Z_0-9]*\\s*\\d+.*")) {
-                System.err.println("推断: 标识符后直接跟数字，可能缺少左方括号");
                 return "[";
             }
         }
@@ -353,36 +315,31 @@ public class Project2ErrorListener extends BaseErrorListener {
         return "(";
     }
     private String extractFromMismatchedInput(String msg) {
-        System.err.println("从 mismatched input 中提取符号");
-
+        
         // 分析错误消息来推断缺失的符号
         Pattern pattern = Pattern.compile("expecting \\{([^}]+)\\}");
         Matcher matcher = pattern.matcher(msg);
         if (matcher.find()) {
             String expectingSet = matcher.group(1);
-            System.err.println("期望的符号集合: " + expectingSet);
-
+            
             // 根据期望的符号集合推断最可能缺失的符号
 
             // 如果期望的是类型说明符，推断缺失类型说明符
             if (expectingSet.contains("'int'") || expectingSet.contains("'char'") ||
                     expectingSet.contains("'struct'") || expectingSet.contains("INT") ||
                     expectingSet.contains("CHAR") || expectingSet.contains("STRUCT")) {
-                System.err.println("推断: 期望类型说明符，可能缺少 int");
                 return "int";
             }
 
             // 如果期望的是语句开始符号，推断缺失分号或右大括号
             if (expectingSet.contains("';'") || expectingSet.contains("SEMI") ||
                     expectingSet.contains("'}'") || expectingSet.contains("RBRACE")) {
-                System.err.println("推断: 期望语句结束符号，可能缺少分号");
                 return ";";
             }
 
             // 如果期望的是表达式开始符号，推断缺失标识符或常量
             if (expectingSet.contains("Identifier") || expectingSet.contains("Number") ||
                     expectingSet.contains("Char")) {
-                System.err.println("推断: 期望表达式开始，可能缺少标识符");
                 return "Identifier";
             }
         }
@@ -410,44 +367,35 @@ public class Project2ErrorListener extends BaseErrorListener {
             return "UNKNOWN";
         }
 
-        System.err.println("转换符号: '" + symbol + "'");
-
+       
         // 特殊处理各种符号
         if (symbol.equals("}") || symbol.equals("RBRACE") || symbol.equals("'}'")) {
-            System.err.println("识别为右大括号: RBRACE");
             return "RBRACE";
         }
         if (symbol.equals("(") || symbol.equals("LPAREN") || symbol.equals("'('")) {
-            System.err.println("识别为左括号: LPAREN");
             return "LPAREN";
         }
         if (symbol.equals(")") || symbol.equals("RPAREN") || symbol.equals("')'")) {
-            System.err.println("识别为右括号: RPAREN");
             return "RPAREN";
         }
         if (symbol.equals("int") || symbol.equals("INT")) {
-            System.err.println("识别为整型: INT");
             return "INT";
         }
         if (symbol.equals("char") || symbol.equals("CHAR")) {
-            System.err.println("识别为字符型: CHAR");
             return "CHAR";
         }
         if (symbol.equals("struct") || symbol.equals("STRUCT")) {
-            System.err.println("识别为结构体: STRUCT");
             return "STRUCT";
         }
 
         // 首先检查映射表
         if (SYMBOL_TO_TOKEN_MAP.containsKey(symbol)) {
             String result = SYMBOL_TO_TOKEN_MAP.get(symbol);
-            System.err.println("映射表找到: " + result);
             return result;
         }
 
         // 如果已经是全大写的token名称，直接返回
         if (symbol.matches("[A-Z][A-Z_]*")) {
-            System.err.println("已是大写token名称: " + symbol);
             return symbol;
         }
 
@@ -470,7 +418,6 @@ public class Project2ErrorListener extends BaseErrorListener {
             case "';'":
                 return "SEMI";
             default:
-                System.err.println("默认转换: " + symbol.toUpperCase());
                 return symbol.toUpperCase();
         }
     }
@@ -502,17 +449,12 @@ public class Project2ErrorListener extends BaseErrorListener {
             Token currentToken = parser.getCurrentToken();
             int currentIndex = currentToken.getTokenIndex();
 
-            System.err.println("当前token索引: " + currentIndex + ", 文本: '" + currentToken.getText() + "'");
-
             // 向前查找上一个在默认通道的token
             for (int i = currentIndex - 1; i >= 0; i--) {
                 Token token = tokenStream.get(i);
-                System.err.println("检查token[" + i + "]: '" + token.getText() +
-                        "' at line " + token.getLine() + ", channel: " + token.getChannel());
-
+                
                 if (token.getChannel() == Token.DEFAULT_CHANNEL && !token.getText().isEmpty()) {
                     int line = token.getLine() - 1; // 转换为0-based
-                    System.err.println("找到前一个token，行号: " + line);
                     return line;
                 }
             }
@@ -522,7 +464,6 @@ public class Project2ErrorListener extends BaseErrorListener {
                 Token token = tokenStream.get(i);
                 if (token.getChannel() == Token.DEFAULT_CHANNEL && !token.getText().isEmpty()) {
                     int line = token.getLine() - 1;
-                    System.err.println("使用第一个有效token，行号: " + line);
                     return line;
                 }
             }
@@ -530,7 +471,6 @@ public class Project2ErrorListener extends BaseErrorListener {
 
         // 如果没有找到前一个token，使用当前行减1
         int fallbackLine = Math.max(0, currentLine - 1); // ANTLR行号是1-based，我们转换为0-based
-        System.err.println("使用回退行号: " + fallbackLine);
         return fallbackLine;
     }
 }
