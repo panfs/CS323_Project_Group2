@@ -17,7 +17,7 @@ public class Main {
 //        System.out.println("\n--------------------\n");
 //        {
 //            InputStream input = new FileInputStream("testcases/project2/correct_testcase_3.splc");
-//            Grader grader = new Grader(input, System.out, true);
+//            Grader grader = new Grader(input, System.out, false);
 //
 //            grader.run();
 //        }
