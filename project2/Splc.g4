@@ -55,8 +55,8 @@ expression
     | Char                                         # CharPrimary
     | LPAREN expression RPAREN                     # ParenPrimary
     | expression LBRACK expression RBRACK          # ArrayAccessExpression
-    | expression DOT Identifier                    # StructAccessExpression
-    | expression ARROW Identifier                  # StructPtrAccessExpression
+    | expression '.' Identifier                    # StructAccessExpression
+    | expression '->' Identifier                  # StructPtrAccessExpression
     | expression INC                               # PostfixIncExpression
     | expression DEC                               # PostfixDecExpression
     | Identifier LPAREN (expression (COMMA expression)*)? RPAREN       # FunctionCallExpression
@@ -106,8 +106,6 @@ OR : '||' ;
 NOT : '!' ;
 INC : '++' ;
 DEC : '--' ;
-DOT : '.' ;
-ARROW : '->' ;
 AMP : '&' ;
 // ---------- Separators ----------
 SEMI : ';' ;
