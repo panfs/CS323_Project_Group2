@@ -1,3 +1,4 @@
+// test update
 //lexer grammar Splc;
 grammar Splc;
 
@@ -19,6 +20,7 @@ globalDef
     |specifier varDec SEMI
     |specifier SEMI
     ;
+
 specifier
     :INT
     |CHAR
@@ -48,13 +50,16 @@ statement
 
 
 expression
-    : primary                                      # PrimaryExpression
+    : Identifier                                   # IdentifierPrimary
+    | Number                                       # NumberPrimary
+    | Char                                         # CharPrimary
+    | LPAREN expression RPAREN                     # ParenPrimary
     | expression LBRACK expression RBRACK          # ArrayAccessExpression
     | expression DOT Identifier                    # StructAccessExpression
     | expression ARROW Identifier                  # StructPtrAccessExpression
     | expression INC                               # PostfixIncExpression
     | expression DEC                               # PostfixDecExpression
-    | Identifier LPAREN argumentList? RPAREN       # FunctionCallExpression
+    | Identifier LPAREN (expression (COMMA expression)*)? RPAREN       # FunctionCallExpression
     | <assoc=right> INC expression                 # PrefixIncExpression
     | <assoc=right> DEC expression                 # PrefixDecExpression
     | <assoc=right> PLUS expression                # UnaryPlusExpression
@@ -70,15 +75,6 @@ expression
     | expression OR expression                     # LogicalOrExpression
     | <assoc=right> expression ASSIGN expression   # AssignExpression
     ;
-
-primary
-    : Identifier           # IdentifierPrimary
-    | Number               # NumberPrimary
-    | Char                 # CharPrimary
-    | LPAREN expression RPAREN # ParenPrimary
-    ;
-
-argumentList: expression (COMMA expression)*;
 
 // =========================
 // Lexer Rules
@@ -126,7 +122,7 @@ RBRACK : ']' ;
 Identifier : [a-zA-Z_][a-zA-Z_0-9]* ;
 Number     : '0' | [1-9][0-9]*      ;
 Char       : '\'' (EscapeChar | ~['\\\r\n]) '\'' ;
-fragment EscapeChar: '\\' ['"\\nrt0];
+fragment EscapeChar: '\\' ['"\\nrt0];  // 支持常见的转义字符
 // ---------- Whitespace & Comments ----------
 WS      : [ \t\r\n]+ -> skip;
 LINE_COMMENT: '//' .*? ('\r'? '\n' | EOF) -> skip;
