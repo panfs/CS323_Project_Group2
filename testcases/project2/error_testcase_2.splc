@@ -1,12 +1,7 @@
 int main() {
-    int c = 1;
-    int d = 2;
-    int arr [10];
-    char cc = \'';
-    int res = mul(c, d);
-    return 0;
-}
-int mul(int a, int b){
-    a * b;
-    return 0;
+    int i = 10;
+    if (i > 5 {
+        i = 0;
+    }
+    return i;
 }

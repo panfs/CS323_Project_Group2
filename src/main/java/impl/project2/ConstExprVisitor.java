@@ -15,11 +15,6 @@ public class ConstExprVisitor extends SplcBaseVisitor<Integer> {
     }
 
     @Override
-    public Integer visitPrimaryExpression(SplcParser.PrimaryExpressionContext ctx) {
-        return visit(ctx.primary());
-    }
-
-    @Override
     public Integer visitNumberPrimary(SplcParser.NumberPrimaryContext ctx) {
         return Integer.parseInt(ctx.Number().getText());
     }

@@ -1,7 +1,4 @@
 int main() {
-    int arr [10] = {1, 2, 3, 4, 5};
-    arr[3] = 3;
+    int x = 10
     return 0;
-
-    char c = _';
 }
