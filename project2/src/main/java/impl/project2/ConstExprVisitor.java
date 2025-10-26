@@ -15,11 +15,6 @@ public class ConstExprVisitor extends SplcBaseVisitor<Integer> {
     }
 
     @Override
-    public Integer visitPrimaryExpression(SplcParser.PrimaryExpressionContext ctx) {
-        return visit(ctx.primary());
-    }
-
-    @Override
     public Integer visitNumberPrimary(SplcParser.NumberPrimaryContext ctx) {
         return Integer.parseInt(ctx.Number().getText());
     }
@@ -66,23 +61,90 @@ public class ConstExprVisitor extends SplcBaseVisitor<Integer> {
         return null;
     }
 
-    @Override public Integer visitIdentifierPrimary(SplcParser.IdentifierPrimaryContext ctx) { return null; }
-    @Override public Integer visitCharPrimary(SplcParser.CharPrimaryContext ctx) { return null; }
-    @Override public Integer visitArrayAccessExpression(SplcParser.ArrayAccessExpressionContext ctx) { return null; }
-    @Override public Integer visitStructAccessExpression(SplcParser.StructAccessExpressionContext ctx) { return null; }
-    @Override public Integer visitStructPtrAccessExpression(SplcParser.StructPtrAccessExpressionContext ctx) { return null; }
-    @Override public Integer visitFunctionCallExpression(SplcParser.FunctionCallExpressionContext ctx) { return null; }
-    @Override public Integer visitPostfixIncExpression(SplcParser.PostfixIncExpressionContext ctx) { return null; }
-    @Override public Integer visitPostfixDecExpression(SplcParser.PostfixDecExpressionContext ctx) { return null; }
-    @Override public Integer visitPrefixIncExpression(SplcParser.PrefixIncExpressionContext ctx) { return null; }
-    @Override public Integer visitPrefixDecExpression(SplcParser.PrefixDecExpressionContext ctx) { return null; }
-    @Override public Integer visitAddressOfExpression(SplcParser.AddressOfExpressionContext ctx) { return null; }
-    @Override public Integer visitDereferenceExpression(SplcParser.DereferenceExpressionContext ctx) { return null; }
-    @Override public Integer visitRelationalExpression(SplcParser.RelationalExpressionContext ctx) { return null; }
-    @Override public Integer visitEqualityExpression(SplcParser.EqualityExpressionContext ctx) { return null; }
-    @Override public Integer visitLogicalAndExpression(SplcParser.LogicalAndExpressionContext ctx) { return null; }
-    @Override public Integer visitLogicalOrExpression(SplcParser.LogicalOrExpressionContext ctx) { return null; }
-    @Override public Integer visitAssignExpression(SplcParser.AssignExpressionContext ctx) { return null; }
+    @Override
+    public Integer visitIdentifierPrimary(SplcParser.IdentifierPrimaryContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Integer visitCharPrimary(SplcParser.CharPrimaryContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Integer visitArrayAccessExpression(SplcParser.ArrayAccessExpressionContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Integer visitStructAccessExpression(SplcParser.StructAccessExpressionContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Integer visitStructPtrAccessExpression(SplcParser.StructPtrAccessExpressionContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Integer visitFunctionCallExpression(SplcParser.FunctionCallExpressionContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Integer visitPostfixIncExpression(SplcParser.PostfixIncExpressionContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Integer visitPostfixDecExpression(SplcParser.PostfixDecExpressionContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Integer visitPrefixIncExpression(SplcParser.PrefixIncExpressionContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Integer visitPrefixDecExpression(SplcParser.PrefixDecExpressionContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Integer visitAddressOfExpression(SplcParser.AddressOfExpressionContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Integer visitDereferenceExpression(SplcParser.DereferenceExpressionContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Integer visitRelationalExpression(SplcParser.RelationalExpressionContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Integer visitEqualityExpression(SplcParser.EqualityExpressionContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Integer visitLogicalAndExpression(SplcParser.LogicalAndExpressionContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Integer visitLogicalOrExpression(SplcParser.LogicalOrExpressionContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Integer visitAssignExpression(SplcParser.AssignExpressionContext ctx) {
+        return null;
+    }
 
     @Override
     public Integer visitVarDecStmt(SplcParser.VarDecStmtContext ctx) {
