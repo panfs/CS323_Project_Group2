@@ -50,29 +50,39 @@ statement
 
 
 expression
+// precedence 1
     : Identifier                                   # IdentifierPrimary
     | Number                                       # NumberPrimary
     | Char                                         # CharPrimary
     | LPAREN expression RPAREN                     # ParenPrimary
     | expression LBRACK expression RBRACK          # ArrayAccessExpression
-    | expression '.' Identifier                    # StructAccessExpression
-    | expression '->' Identifier                  # StructPtrAccessExpression
+// precedence 2
     | expression INC                               # PostfixIncExpression
     | expression DEC                               # PostfixDecExpression
     | Identifier LPAREN (expression (COMMA expression)*)? RPAREN       # FunctionCallExpression
+    | expression DOT Identifier                    # StructAccessExpression
+    | expression ARROW Identifier                  # StructPtrAccessExpression
+// precedence 3
     | <assoc=right> INC expression                 # PrefixIncExpression
     | <assoc=right> DEC expression                 # PrefixDecExpression
     | <assoc=right> PLUS expression                # UnaryPlusExpression
     | <assoc=right> MINUS expression               # UnaryMinusExpression
     | <assoc=right> NOT expression                 # LogicalNotExpression
-    | <assoc=right> AMP expression                 # AddressOfExpression
     | <assoc=right> STAR expression                # DereferenceExpression
+    | <assoc=right> AMP expression                 # AddressOfExpression
+// precedence 4
     | expression (STAR | DIV | MOD) expression     # MultiplicativeExpression
+// precedence 5
     | expression (PLUS | MINUS) expression         # AdditiveExpression
+// precedence 6
     | expression (LT | LE | GT | GE) expression    # RelationalExpression
+// precedence 7
     | expression (EQ | NEQ) expression             # EqualityExpression
+// precedence 8
     | expression AND expression                    # LogicalAndExpression
+// precedence 9
     | expression OR expression                     # LogicalOrExpression
+// precedence 10
     | <assoc=right> expression ASSIGN expression   # AssignExpression
     ;
 
@@ -107,6 +117,8 @@ NOT : '!' ;
 INC : '++' ;
 DEC : '--' ;
 AMP : '&' ;
+DOT : '.' ;
+ARROW: '->';
 // ---------- Separators ----------
 SEMI : ';' ;
 COMMA : ',' ;
