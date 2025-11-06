@@ -8,24 +8,10 @@ import java.io.InputStream;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-//        {
-//            InputStream input = new FileInputStream("testcases/project2/error_testcase_2.splc");
-//            Grader grader = new Grader(input, System.out, true);
-//
-//            grader.run();
-//        }
-//        System.out.println("\n--------------------\n");
         {
-            InputStream input = new FileInputStream("testcases/project2/correct_testcase_1.splc");
-            Grader grader = new Grader(input, System.out, false);
-
+            InputStream input = new FileInputStream("testcases/project3/ok_01.splc");
+            AbstractGrader grader = new Grader(input, System.out);
             grader.run();
         }
-//        {
-//            InputStream input = new FileInputStream("testcases/project2/testcase_all.txt");
-//            Grader grader = new Grader(input, System.out, true);
-//
-//            grader.run();
-//        }
     }
 }
