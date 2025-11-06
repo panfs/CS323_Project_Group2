@@ -1,0 +1,205 @@
+// 基础类型和变量声明
+int global_var;
+char global_char;
+
+// 扩展1: 结构体
+struct Point {
+    int x;
+    int y;
+};
+
+struct Person {
+    char name[20];
+    int age;
+    struct Point location;
+};
+
+// 扩展2: 指针
+int *int_ptr;
+char *char_ptr;
+int *array_ptr[10];          // 指针数组
+int (*ptr_to_array)[10];     // 指向数组的指针
+struct Point *struct_ptr;
+struct Person *person_ptr;
+
+// 全局结构体声明
+struct EmptyStruct;
+
+// 函数定义
+// int add(int a, int b) {
+//     return a + b;
+// }
+
+void processArray(int arr[], int size) {
+    // 数组参数处理
+}
+
+// 复杂指针声明
+struct Node {
+    int data;
+    struct Node *next;
+};
+
+int main() {
+    // 基础变量声明和常量表达式
+    int a = 10;
+    int b = 20;
+    int c = a + b * 3;           // 常量表达式
+    int d = (a + b) * 2;         // 带括号的表达式
+
+    // 字符常量
+    char ch = 'A';
+
+    // 数组声明和访问
+    int arr[5] = {1, 2, 3, 4, 5};
+    int first = arr[0];
+    arr[1] = 10;
+
+    // 结构体使用
+    struct Point p1;
+    p1.x = 100;
+    p1.y = 200;
+
+    struct Point p2 = {50, 60};
+
+    // 结构体指针使用
+    struct Point *p_ptr = &p1;
+    (*p_ptr).x = 150;
+    p_ptr->y = 250;
+
+    // 指针操作
+    int x = 42;
+    int *ptr = &x;
+    *ptr = 100;
+
+    // 指针数组
+    int *ptr_arr[3];
+    int var1 = 1, var2 = 2, var3 = 3;
+    ptr_arr[0] = &var1;
+    ptr_arr[1] = &var2;
+    ptr_arr[2] = &var3;
+
+    // 复杂指针声明
+    int matrix[3][4];
+    int (*matrix_ptr)[4] = matrix;
+
+    // 函数调用
+    int sum = add(a, b);
+    int result = add(5, 3) * 2;
+
+    // 各种语句
+    if (a > b) {
+        c = a - b;
+    } else {
+        c = b - a;
+    }
+
+    while (a < 100) {
+        a = a + 1;
+    }
+
+    for (int i = 0; i < 10; i++) {
+        arr[i] = i * i;
+    }
+
+    // 自增自减操作
+    int counter = 0;
+    counter++;
+    ++counter;
+    counter--;
+    --counter;
+
+    // 逻辑运算
+    if (a > 0 && b < 100 || c == 50) {
+        // 逻辑操作
+    }
+
+    // 赋值运算
+    a = b = c = 0;
+
+    // 取地址和解引用
+    int value = 42;
+    int *value_ptr = &value;
+    int deref = *value_ptr;
+
+    // 返回语句
+    return 0;
+}
+
+// 另一个函数演示更多特性
+void complexFunction() {
+    // 局部结构体变量
+    struct Person john;
+    john.age = 25;
+    john.location.x = 10;
+    john.location.y = 20;
+
+    // 结构体指针数组
+    struct Person *people[5];
+
+    // 多重指针
+    int **double_ptr;
+    int base = 100;
+    int *single_ptr = &base;
+    double_ptr = &single_ptr;
+
+    // 复杂表达式
+    int x = 10, y = 20, z = 30;
+    int complex_expr = (x + y) * z - x / y + y % 3;
+
+    // 各种一元操作符
+    int positive = +x;
+    int negative = -y;
+    int logical_not = !z;
+
+    // 关系运算
+    if (x == y) {
+        // 等于
+    }
+    if (x != y) {
+        // 不等于
+    }
+    if (x < y) {
+        // 小于
+    }
+    if (x <= y) {
+        // 小于等于
+    }
+    if (x > y) {
+        // 大于
+    }
+    if (x >= y) {
+        // 大于等于
+    }
+}
+
+// 演示常量表达式的函数
+void constExprDemo() {
+    // 这些都是常量表达式（根据项目定义）
+    int c1 = 42;                    // 整数常量
+    int c2 = (10 + 20) * 3;         // 括号和运算
+    int c3 = -100 / 2;              // 一元负号和除法
+    int c4 = 5 + 3 * 2;             // 加法和乘法
+    int c5 = 10 % 3;                // 取模运算
+
+    // 这些不是常量表达式（包含变量）
+    int var = 5;
+    int nc1 = var + 10;             // 包含变量
+    // int nc2 = add(1, 2);         // 函数调用（注释掉，因为根据定义不是constexpr）
+    // int nc3 = arr[0] + 1;        // 数组访问（注释掉，因为根据定义不是constexpr）
+}
+
+// 错误示例函数（用于测试错误处理）
+void errorExamples() {
+    int missing_semicolon = 10      // 这里应该缺少分号
+
+    if (missing_paren {              // 这里应该缺少右括号
+        // 代码块
+    }
+
+    struct IncompleteStruct {        // 这里应该缺少右大括号
+        int field1;
+        int field2;
+
+    int array_without_size[];        // 这里应该缺少数组大小
+}
